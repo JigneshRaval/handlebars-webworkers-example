@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Software List</title>
+	</head>
+	<body>
+		<div id="example">
+			<div id="todoExample"></div>
+		</div>
+		
+		<div id="softwareList"></div>
+		
+		<!--
+			<script src="js/soft-list.json"></script>
+			<script src="js/handlebars-v4.0.5.js"></script>
+		-->
+		<!--<script src="js/jquery-2.1.4.js"></script>-->
+		
+		<!--<script src="js/react.js"></script>
+			<script src="js/react-dom.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>	 -->	
+		
+		
+		<script id="entry-template" type="text/x-handlebars-template">
+			{{#each softwares2}}
+			
+			<div class="entry">
+		<h1>{{@index}} = {{name}} test</h1>
+		<div class="body">
+			{{description}}
+		</div>
+	</div>
+	{{/each}}
+</script>
+
+<div id="result"></div>
+<script type="text/javascript">
+	var start = new Date().getTime();
+	console.log('START :', start);
+	var source   = document.getElementById("entry-template").innerHTML; // $("#entry-template").html();
+	
+	/* Normal Method */
+	/*
+	function NormalMethod() {		
+		var template = Handlebars.compile(source);
+		
+		var softwareListObj1 = {};
+		softwareListObj1.softwares2 = []
+		for(var i = 0; i < 3000; i++) {
+			softwareListObj1.softwares2.push(softwareListObj.softwares[i]);
+		}
+		
+		var html    = template(softwareListObj1);
+		
+		document.getElementById("result").innerHTML = html;
+		console.log('END : ', new Date().getTime() - start);
+	}
+	
+	NormalMethod();
+	*/
+	/* Using Web Worker */
+	var w;
+	
+	function startWorker() {
+		if(typeof(Worker) !== "undefined") {
+			if(typeof(w) == "undefined") {
+				w = new Worker("js/demo_workers.js");
+			}
+			
+			var mesage = [source, { test : 1, test : 2 }, 6 ];
+			w.postMessage(source);
+			
+			w.onmessage = function(event) {
+				//console.log(event, event.data);
+				document.getElementById("result").innerHTML = event.data;
+				console.log(new Date().getTime() - start);
+			};
+		}
+		else {
+			document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
+		}
+	}
+	
+	startWorker();
+	
+</script>
+</body>
+</html>									

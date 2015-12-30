@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Software List</title>
+		<style>
+			body { font-family: Arial; font-size: 13px; }
+			.container { max-width: 960px; margin:0 auto;}
+			.software__item { border: 1px solid #EEE; margin: 1em 0; }
+			.software__title:hover { background-color: #EEE; }
+			</style>
+	</head>
+	<body>
+		<div id="example">
+			<div id="todoExample"></div>
+		</div>
+		
+		<div class="container">
+			<div id="softwareList"></div>
+			</div>
+		
+		
+			<script src="js/soft-list.json"></script>
+			<script src="js/handlebars-v4.0.5.js"></script>
+		<!---->
+		<!--<script src="js/jquery-2.1.4.js"></script>-->
+		
+		<!--<script src="js/react.js"></script>
+			<script src="js/react-dom.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>	 -->	
+		
+		
+		<script id="entry-template" type="text/x-handlebars-template">
+			{{#each softwares}}
+			
+			<div class="software__item">
+		<h1 class="software__title">{{@index}} = {{name}} test</h1>
+		<div class="software__description">
+			{{description}}
+		</div>
+	</div>
+	{{/each}}
+</script>
+
+<div id="result"></div>
+<script type="text/javascript">
+	//var start = new Date().getTime();
+		var source   = document.getElementById("entry-template").innerHTML; // $("#entry-template").html();
+	
+	function NormalMethod() {
+		/* Normal Method */
+		
+		var template = Handlebars.compile(source);
+		/*
+		var softwareListObj1 = {};
+		softwareListObj1.softwares2 = []
+		for(var i = 0; i < 10000; i++) {
+			softwareListObj1.softwares2.push(softwareListObj.softwares[i]);
+		}
+		*/
+		var html    = template(softwareListObj);
+		
+		document.getElementById("softwareList").innerHTML = html;
+		
+	}
+	
+	NormalMethod();
+	
+	/* Using Web Worker */
+	/*var w;
+	
+	function startWorker() {
+		if(typeof(Worker) !== "undefined") {
+			if(typeof(w) == "undefined") {
+				w = new Worker("js/demo_workers.js");
+			}
+			
+			var mesage = [source, { test : 1, test : 2 }, 6 ];
+			w.postMessage(source);
+			
+			w.onmessage = function(event) {
+				//console.log(event, event.data);
+				document.getElementById("result").innerHTML = event.data;
+				console.log(new Date().getTime() - start);
+			};
+		}
+		else {
+			document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
+		}
+	}
+	
+	//startWorker();
+	*/
+</script>
+</body>
+</html>									

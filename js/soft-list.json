@@ -1,0 +1,7 @@
+var softwareListObj = {
+	softwares : [
+	{ id : 1, name : "Test", url : "", description : "This is test softwares", featurs : "", isPortable : true, images : [] },
+	{ id : 2, name : "Test 2", url : "", description : "This is test softwares", featurs : "", isPortable : true, images : [] },
+	{ id : 1, name : "Test", url : "", description : "This is test softwares", featurs : "", isPortable : true, images : [] },	
+	]
+}
