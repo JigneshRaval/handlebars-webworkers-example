@@ -1,0 +1,76 @@
+<html>
+	<head>
+		
+	</head>
+	<body>
+		<div id="result"></div>
+		
+		<script>
+			function str2ab_2(str) {
+				var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+				var bufView = new Uint16Array(buf);
+				for (var i=0, strLen=str.length; i<strLen; i++) {
+					//console.log(bufView[i], str.charCodeAt(i));
+					bufView[i] = str.charCodeAt(i);
+				}
+				
+				//console.log("Buffer :", buf, bufView);
+				return bufView;
+			}
+			// Array Buffer To String
+			// Ref : https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+			function ab2str_2(buf) {
+				return String.fromCharCode.apply(null, new Uint16Array(buf));
+			}
+			// START WORKER CODE
+			var w;
+			
+			function startWorker() {
+				if(typeof(Worker) !== "undefined") {
+					if(typeof(w) == "undefined") {
+						w = new Worker("js/array_buffer_workers.js");
+					}
+					
+					var objData = {
+						"employeeId": 103,
+						"name": "Sam Smith",
+						"url" : "../js/cities.json",
+						"dateHired": new Date(2006, 11, 15)
+					};
+					
+					var str= JSON.stringify(objData);
+					
+					//console.log("str :", str);
+					
+					var arbfr = str2ab_2(str);
+					
+					//console.log("arbfr :", arbfr);
+					
+					w.postMessage(arbfr.buffer, [arbfr.buffer]);
+					
+					if (arbfr.byteLength) {
+						alert('Transferables are not supported in your browser!');
+						//console.log('USING STRUCTURED CLONE (copy) :(');
+						} else {
+						//console.log('USING TRANSFERABLE OBJECTS :)');						
+					}
+					
+					w.onmessage = function(event) {
+					console.log(event.data);
+						//var abToString = ab2str_2(event.data);
+						var parsing = JSON.parse(abToString);
+						document.getElementById("result").innerHTML = parsing;
+						
+					};
+				}
+				else {
+					document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
+				}
+			}
+			
+			startWorker();
+			
+			
+		</script>
+	</body>
+</html>				
